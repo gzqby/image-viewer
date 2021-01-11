@@ -1,0 +1,17 @@
+{
+  "name": "@zgo/image-viewer",
+  "version": "0.1.0",
+  "description": "This is an image viewer that can be deployed online as a website or placed in your code",
+  "main": "client/index.js",
+  "files": [
+    "client"
+  ],
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org/"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "zhiqiang.guo",
+  "license": "ISC"
+}
