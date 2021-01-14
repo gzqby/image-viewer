@@ -8,49 +8,10 @@
 </head>
 <body>
   <ul style="display: none;">
-    <!-- http://localhost:3000/request-view?src=https://s3.ax1x.com/2021/01/07/sZxSvn.md.png&alt=123&title=title -->
-    <!-- http://localhost:3000/request-view?src=https://s3.ax1x.com/2021/01/07/sZxCD0.png&alt=123&title=title -->
     <% images.forEach(function(item){ %>
       <li><img data-src="<%= item.src %>"  alt="<%= item.alt %>"></li>
     <% }); %>
-    <!-- <li><img data-src="https://s3.ax1x.com/2021/01/07/sZxSvn.md.png" loading="lazy" alt="1"></li>
-    <li><img src="https://s3.ax1x.com/2021/01/07/sZxCD0.png" loading="lazy" alt="3"></li> -->
-    <!-- <li><img data-src="https://s3.ax1x.com/2021/01/07/sZv6nx.jpg" loading="lazy" alt="4"></li>
-    <img src="https://s3.ax1x.com/2021/01/07/sZxCD0.png" alt="This is a task manager window of google chrome" srcset=""> -->
   </ul>
-  <div class="imageViewerBox">
-    <div class="img_title">
-      <span class="img_con">imageviewer</span>
-      <span class="img_actions"><div class="img_icon icon_cycle"></div>
-        <div class="img_action">
-          <ul>
-            <li><a class="img_full">全屏</a></li>
-            <!-- <li><a class="img_close">关闭</a></li> -->
-            <li><a href="https://github.com/zgoby/image-viewer">GitHub</a></li>
-          </ul>
-        </div>
-      </span>
-    </div>
-    <div class="img_imgBox">
-      <!-- <div class="img_position">
-        <div class="img_size">
-        </div>
-      </div> -->
-    </div>
-    <div class="img_controlBox clearfix">
-      <div class="img_page">
-        <a class="img_item prev"><svg viewBox="0 0 1024 1024" focusable="false"><path d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z" /></svg></a>
-        <span class="img_item img_pagebar"><span class="currentSize">0</span> / <span class="total">0</span></span>
-        <a class="img_item next"><svg viewBox="0 0 1024 1024" focusable="false"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z" /></svg></a>
-      </div>
-      <div class="img_scale">
-        <a class="img_item originalShap"><svg viewBox="65 65 896 896" focusable="false"><path d="M290 236.4l43.9-43.9a8.01 8.01 0 00-4.7-13.6L169 160c-5.1-.6-9.5 3.7-8.9 8.9L179 329.1c.8 6.6 8.9 9.4 13.6 4.7l43.7-43.7L370 423.7c3.1 3.1 8.2 3.1 11.3 0l42.4-42.3c3.1-3.1 3.1-8.2 0-11.3L290 236.4zm352.7 187.3c3.1 3.1 8.2 3.1 11.3 0l133.7-133.6 43.7 43.7a8.01 8.01 0 0013.6-4.7L863.9 169c.6-5.1-3.7-9.5-8.9-8.9L694.8 179c-6.6.8-9.4 8.9-4.7 13.6l43.9 43.9L600.3 370a8.03 8.03 0 000 11.3l42.4 42.4zM845 694.9c-.8-6.6-8.9-9.4-13.6-4.7l-43.7 43.7L654 600.3a8.03 8.03 0 00-11.3 0l-42.4 42.3a8.03 8.03 0 000 11.3L734 787.6l-43.9 43.9a8.01 8.01 0 004.7 13.6L855 864c5.1.6 9.5-3.7 8.9-8.9L845 694.9zm-463.7-94.6a8.03 8.03 0 00-11.3 0L236.3 733.9l-43.7-43.7a8.01 8.01 0 00-13.6 4.7L160.1 855c-.6 5.1 3.7 9.5 8.9 8.9L329.2 845c6.6-.8 9.4-8.9 4.7-13.6L290 787.6 423.7 654c3.1-3.1 3.1-8.2 0-11.3l-42.4-42.4z" /></svg></a>
-        <a class="img_item widthAdapter"><svg viewBox="65 65 896 896" focusable="false"><path d="M180 176h-60c-4.4 0-8 3.6-8 8v656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V184c0-4.4-3.6-8-8-8zm724 0h-60c-4.4 0-8 3.6-8 8v656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V184c0-4.4-3.6-8-8-8zM785.3 504.3L657.7 403.6a7.23 7.23 0 00-11.7 5.7V476H378v-62.8c0-6-7-9.4-11.7-5.7L238.7 508.3a7.14 7.14 0 000 11.3l127.5 100.8c4.7 3.7 11.7.4 11.7-5.7V548h268v62.8c0 6 7 9.4 11.7 5.7l127.5-100.8c3.8-2.9 3.8-8.5.2-11.4z" /></svg></a>
-        <a class="img_item heightAdapter"><svg viewBox="65 65 896 896" focusable="false"><path d="M840 836H184c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h656c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8zm0-724H184c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h656c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8zM610.8 378c6 0 9.4-7 5.7-11.7L515.7 238.7a7.14 7.14 0 00-11.3 0L403.6 366.3a7.23 7.23 0 005.7 11.7H476v268h-62.8c-6 0-9.4 7-5.7 11.7l100.8 127.5c2.9 3.7 8.5 3.7 11.3 0l100.8-127.5c3.7-4.7.4-11.7-5.7-11.7H548V378h62.8z" /></svg></a>
-      </div>
-    </div>
-    <div class="img_loading"><svg viewBox="0 0 1024 1024" focusable="false"><path d="M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z" /></svg></div>
-  </div>
 </body>
 <script src="./index.js"></script>
 <script>

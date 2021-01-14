@@ -2,13 +2,13 @@ html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:1
 *{box-sizing: border-box;}
 ul,li,ol{list-style: none;padding: 0;margin: 0;}
 a{text-decoration: none;}
-.imageViewerBox .img_controlBox a.img_item,
-.imageViewerBox .img_title .img_actions .img_action a {
+.imageViewerBox.img_pc .img_controlBox a.img_item,
+.imageViewerBox.img_pc .img_title .img_actions .img_action a {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
 }
-.imageViewerBox{
+.imageViewerBox.img_pc{
   position: absolute;
   width: 100%;
   height: 100%;
@@ -16,10 +16,22 @@ a{text-decoration: none;}
   top: 0;
   background-color: #fafafa;
 }
-.imageViewerBox.hide{
+.imageViewerBox.img_pc.img_modal{
   display: none;
+  width: 880px;
+  height: 580px;
+  max-width: 100%;
+  max-height: 100%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0px 2px 8px 0px rgba(0,0,0,0.12);
+  border-radius: 2px;
 }
-.imageViewerBox .img_title{
+.imageViewerBox.img_pc.img_modal.img_open{
+  display: block;
+}
+.imageViewerBox.img_pc .img_title{
   width: 100%;
   height: 60px;
   line-height: 60px;
@@ -27,7 +39,7 @@ a{text-decoration: none;}
   border-bottom: 1px solid #e8e8e8;
   background: #fff;
 }
-.imageViewerBox .img_title .img_actions{
+.imageViewerBox.img_pc .img_title .img_actions{
   position: relative;
   z-index: 1;
   padding: 15px;
@@ -35,10 +47,10 @@ a{text-decoration: none;}
   float: right;
   cursor: pointer;
 }
-.imageViewerBox .img_title .img_actions:hover .img_action,.imageViewerBox .img_title .img_actions:active .img_action,.imageViewerBox .img_title .img_actions:focus .img_action{
+.imageViewerBox.img_pc .img_title .img_actions:hover .img_action,.imageViewerBox.img_pc .img_title .img_actions:active .img_action,.imageViewerBox.img_pc .img_title .img_actions:focus .img_action{
   display: block;
 }
-.imageViewerBox .img_title .img_actions .img_action{
+.imageViewerBox.img_pc .img_title .img_actions .img_action{
   display: none;
   position: absolute;
   z-index: 99;
@@ -51,7 +63,10 @@ a{text-decoration: none;}
   box-shadow: 0px 2px 8px 0px rgba(0,0,0,0.12);
   transition: all 0.3s;
 }
-.imageViewerBox .img_title .img_actions .img_action::before {
+.imageViewerBox.img_pc .img_title .img_actions.only_close .img_action{
+  display: none;
+}
+.imageViewerBox.img_pc .img_title .img_actions .img_action::before {
     content: "";
     position: absolute;
     top: -10px;
@@ -62,37 +77,65 @@ a{text-decoration: none;}
     border-style: solid;
     border-color: transparent transparent #fff transparent;
 }
-.imageViewerBox .img_title .img_actions .img_action a {
-    display: block;
+.imageViewerBox.img_pc .img_title .img_actions .img_action a {
+    display: none;
     font-size: 12px;
     line-height: 25px;
     text-indent: 12px;
     letter-spacing: 0;
     color: #555;
 }
-.imageViewerBox .img_title .img_actions .img_action a:hover {
+.imageViewerBox.img_pc .img_title .img_actions._close .img_close {
+  display: block;
+}
+.imageViewerBox.img_pc .img_title .img_actions._full .img_full {
+  display: block;
+}
+.imageViewerBox.img_pc .img_title .img_actions._github .img_github {
+  display: block;
+}
+.imageViewerBox.img_pc .img_title .img_actions .img_action a:hover {
   background-color: #fff;
 }
-.imageViewerBox .img_title .img_actions .icon_cycle,.imageViewerBox .img_title .img_actions .icon_cycle::after,.imageViewerBox .img_title .img_actions .icon_cycle::before{
+.imageViewerBox.img_pc .img_title .img_actions .icon_cycle,.imageViewerBox.img_pc .img_title .img_actions .icon_cycle::after,.imageViewerBox.img_pc .img_title .img_actions .icon_cycle::before{
   width: 3px;
   height: 3px;
   border-radius: 50%;
   background-color: #555;
 }
-.imageViewerBox .img_title .img_actions .icon_cycle{
+.imageViewerBox.img_pc .img_title .img_actions .icon_cycle{
   position: relative;
 }
-.imageViewerBox .img_title .img_actions .icon_cycle::after,.imageViewerBox .img_title .img_actions .icon_cycle::before{
+.imageViewerBox.img_pc .img_title .img_actions .icon_cycle::after,.imageViewerBox.img_pc .img_title .img_actions .icon_cycle::before{
   content: '';
   position: absolute;
 }
-.imageViewerBox .img_title .img_actions .icon_cycle::after{
+.imageViewerBox.img_pc .img_title .img_actions .icon_cycle::after{
   right: 6px;
 }
-.imageViewerBox .img_title .img_actions .icon_cycle::before{
+.imageViewerBox.img_pc .img_title .img_actions .icon_cycle::before{
   left: 6px;
 }
-.imageViewerBox .img_imgBox{
+.imageViewerBox.img_pc .img_title .img_actions.only_close .icon_cycle{
+  /* visibility: hidden; */
+  width: 0;
+  height: 0;
+}
+.imageViewerBox.img_pc .img_title .img_actions.only_close .icon_cycle::before,
+.imageViewerBox.img_pc .img_title .img_actions.only_close .icon_cycle::after{
+  width: 15px;
+  height: 1px;
+  border-radius: 0;
+  right: 0;
+  left: 0;
+}
+.imageViewerBox.img_pc .img_title .img_actions.only_close .icon_cycle::before{
+  transform: rotate(45deg);
+}
+.imageViewerBox.img_pc .img_title .img_actions.only_close .icon_cycle::after{
+  transform: rotate(-45deg);
+}
+.imageViewerBox.img_pc .img_imgBox{
   position: absolute;
   width: 100%;
   height: 100%;
@@ -102,10 +145,10 @@ a{text-decoration: none;}
   padding-top: 60px;
   overflow: scroll;
 }
-.imageViewerBox .img_imgBox .img_size{
+.imageViewerBox.img_pc .img_imgBox .img_size{
   transition: transform .3s ease-in-out,-webkit-transform .3s ease-in-out;
 }
-.imageViewerBox .img_imgBox .img_position{
+.imageViewerBox.img_pc .img_imgBox .img_position{
   display: none;
   position: absolute;
   left: 50%;
@@ -114,13 +157,13 @@ a{text-decoration: none;}
   opacity: 1;
   transition: transform .3s ease-in-out,-webkit-transform .3s ease-in-out;
 }
-.imageViewerBox .img_imgBox img{
+.imageViewerBox.img_pc .img_imgBox img{
   display: block;
   box-shadow: 0 6px 15px 0 rgba(0,0,0,.1);
   -webkit-transition: width .3s linear,height .3s linear;
   transition: width .3s linear,height .3s linear;
 }
-.imageViewerBox .img_controlBox{
+.imageViewerBox.img_pc .img_controlBox{
   display: none;
   position: absolute;
   min-width: 273px;
@@ -135,13 +178,13 @@ a{text-decoration: none;}
   box-shadow: 0 0 3px 0 rgba(0,0,0,.1);
   background: rgba(0,0,0,.8);
 }
-.imageViewerBox .img_controlBox .img_page{
+.imageViewerBox.img_pc .img_controlBox .img_page{
   float: left;
 }
-.imageViewerBox .img_controlBox .img_scale{
+.imageViewerBox.img_pc .img_controlBox .img_scale{
   float: right;
 }
-.imageViewerBox .img_controlBox .img_item {
+.imageViewerBox.img_pc .img_controlBox .img_item {
   height: 26px;
   text-align: center;
   line-height: 25px;
@@ -150,28 +193,28 @@ a{text-decoration: none;}
   border: 1px solid transparent;
   color: #fff;
 }
-.imageViewerBox .img_controlBox .img_item.notallow {
+.imageViewerBox.img_pc .img_controlBox .img_item.notallow {
   color: #555;
   cursor: not-allowed;
   /* background-color: rgba(0,0,0,.8)!important; */
 }
-.imageViewerBox .img_controlBox .img_item:last-child{
+.imageViewerBox.img_pc .img_controlBox .img_item:last-child{
   margin-right: 0;
 }
-.imageViewerBox .img_controlBox a.img_item {
+.imageViewerBox.img_pc .img_controlBox a.img_item {
   width: 26px;
   border-radius: 3px;
   border-color: #555;
   cursor: pointer;
   padding: 3px;
 }
-.imageViewerBox .img_controlBox a.img_item.notallow path{
+.imageViewerBox.img_pc .img_controlBox a.img_item.notallow path{
   fill: #555;
 }
-.imageViewerBox .img_controlBox a.img_item path{
+.imageViewerBox.img_pc .img_controlBox a.img_item path{
   fill: #fff;
 }
-.imageViewerBox .img_controlBox a.img_item:not(.notallow):hover, .imageViewerBox .img_controlBox a.img_item:not(.notallow):active, .imageViewerBox .img_controlBox a.img_item:not(.notallow).active {
+.imageViewerBox.img_pc .img_controlBox a.img_item:not(.notallow):hover, .imageViewerBox.img_pc .img_controlBox a.img_item:not(.notallow):active, .imageViewerBox.img_pc .img_controlBox a.img_item:not(.notallow).active {
   background-color: hsla(0,0%,100%,.2);
 }
 .imageViewerBox .img_loading{
@@ -196,7 +239,7 @@ a{text-decoration: none;}
     transform: rotateZ(360deg);
   }
 }
-.show{
+.imageViewerBox .show{
   display: block!important;
 }
 .clearfix::after{
@@ -205,4 +248,93 @@ a{text-decoration: none;}
   clear: both;
   height: 0;
   visibility: hidden;
+}
+.imageViewerBox.img_phone{
+  display: flex;
+  flex-direction: column;
+}
+.imageViewerBox.img_phone > div{
+  display: flex;
+  height: 100vh;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: rgba(0,0,0,1);
+  color: #fff;
+}
+.imageViewerBox.img_phone .img_title{
+  display: flex;
+  margin: 0 20px;
+}
+.imageViewerBox.img_phone .img_title .img_actions{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 44px;
+  flex-grow: 1;
+}
+.imageViewerBox.img_phone .img_title .img_actions .icon_cycle{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 20px;
+  width: 20px;
+}
+.imageViewerBox.img_phone .img_title .img_actions .icon_cycle::after,.imageViewerBox.img_phone .img_title .img_actions .icon_cycle::before{
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 1px;
+  border-radius: 0;
+  background-color: #fff;
+}
+.imageViewerBox.img_phone .img_title .icon_cycle::before{
+  transform: rotate(45deg);
+}
+.imageViewerBox.img_phone .img_title .icon_cycle::after{
+  transform: rotate(-45deg);
+}
+.imageViewerBox.img_phone .img_controlBox{
+  display: flex;
+  flex-direction: column;
+}
+.imageViewerBox.img_phone .img_imgBox{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+}
+.imageViewerBox.img_phone .img_imgBox .img_sliceBox{
+  position: absolute;
+  width: 300%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.imageViewerBox.img_phone .img_imgBox .img_position{
+  width: 33.3%;
+}
+.imageViewerBox.img_phone .img_imgBox .img_position img{
+  max-width: 100%;
+  max-height: 100%;
+}
+.imageViewerBox.img_phone .img_loading path{
+  fill: #fff;
+}
+.imageViewerBox.img_phone .img_controlBox{
+  padding:0 20px 20px;
+}
+.imageViewerBox.img_phone .img_controlBox .img_pagebar{
+  font-size: 12px;
+}
+.imageViewerBox.img_phone .img_controlBox .img_pagebar .currentSize{
+  font-size: 24px;
+  color: rgb(0, 85, 255);
+}
+.imageViewerBox.img_phone .img_controlBox .img_con {
+  line-height: 1.5;
+  font-size: 16px;
 }

@@ -18,6 +18,8 @@ imageViewer.load(options);
 //options -> {k:v} 
 ```
 2. `imageViewer.pageTo(number)`
+3. `imageViewer.openOrClose(boolean)`
+4. `imageViewer.adapteScreen()`
 
 ## options
 
@@ -44,7 +46,7 @@ imageViewer.load(options);
 |||||||
 ## example wrapper
 ```js
-{wrapper: '<div class="imageViewerBox">
+{wrapper: ['phonehtml', '<div class="imageViewerBox">
   <div class="img_title">
     <span class="img_con">imageviewer</span>
     <span class="img_actions"><div class="img_icon icon_cycle"></div>
@@ -76,12 +78,12 @@ imageViewer.load(options);
     </div>
   </div>
   <div class="img_loading">loading...</div>
-</div>'}
+</div>']}
 ```
 ## TODO
-1. Modal support
+<!-- 1. Modal support -->
 2. Mobile support
 3. Life cycle function add
-4. Support customizable wrapper
+<!-- 4. Support customizable wrapper -->
 5. Support customizable event adding
 6. Support mouse drag and drop
