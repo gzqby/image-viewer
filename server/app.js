@@ -36,32 +36,32 @@ app.get('/request-view', (req, res)=>{
   if(json){
     res.redirect(`/image-viewer-json?title=${title}`);
     return;
+  }else{
+    res.redirect(`/image-viewer?title=${title}`);
   }
-  res.redirect(`/image-viewer?title=${title}`);
 });
 
 app.get('/image-viewer', (req, res)=>{
   const imageviewercookie = getCookie(req.headers.cookie, 'imageviewer');
-  const { src, title, alt } = req.query;
+  const {title=""} = req.query;
   if(!imageviewercookie){
-    res.redirect(`/request-view?src=${src}&title=${title}&alt=${alt}`);
+    res.render('index.html', {images: [], title});
   }else{
-    const imagesArr = getImages(imageviewercookie);
+    const imagesArr = getImages(imageviewercookie) || [];
     res.render('index.html', {images: imagesArr, title});
   }
 });
 
 app.get('/image-viewer-json', (req, res)=>{
   const imageviewercookie = getCookie(req.headers.cookie, 'imageviewer');
+  const { src, title, alt } = req.query;
   if(!imageviewercookie){
-    const { src, title, alt } = req.query;
-    if (src) {
-      res.redirect(`/request-view?src=${src}&title=${title}&alt=${alt}`);
-    }
+    res.json([]);
   }else{
+    const imagesArr = getImages(imageviewercookie) || [];
     res.json(imagesArr);
-    res.end();
   }
+  res.end();
 });
 
 function getCookie(cookies, name) {
@@ -94,6 +94,13 @@ function userImgAdd(key, {src, title='', alt=''}) {
     }
   }
   user=users.get(key);
+  for (let index = 0; index < srcs.length; index++) {
+    const element = srcs[index];
+    const where = user.indexOf(element);
+    if (where!==-1) {
+      user.splice(where,1);
+    }
+  }
   user.unshift(...srcs);
   for (let index = 0; index < srcs.length; index++) {
     const element = srcs[index];
