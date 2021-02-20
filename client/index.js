@@ -338,8 +338,11 @@ function getImageViewer() {
       let unSubMouseMoveEvent,prevX=0,prevY=0,nowX=0,nowY=0;
       const dragBox = nowSizeBox.parentElement;
       const unSubMousedownEvent = this.on(dragBox, 'mousedown', function (event) {
+        if (event.button!==0) {
+          return;
+        }
         event.preventDefault();
-        if(!(imgBox.width>=nowSizeBox.clientWidth*nowSizeBox.dataset.scale+that.options.gutter && imgBox.height>=nowSizeBox.clientHeight*nowSizeBox.dataset.scale+that.options.gutter)){
+        if(!(imgBox.width>=nowSizeBox.clientWidth*(nowSizeBox.dataset.scale||1)+that.options.gutter && imgBox.height>=nowSizeBox.clientHeight*(nowSizeBox.dataset.scale||1)+that.options.gutter)){
           let downClientX=event.clientX,downClientY=event.clientY;
           unSubMouseMoveEvent = that.on(dragBox, 'mousemove', function (event) {
             nowX=prevX+event.clientX-downClientX;
