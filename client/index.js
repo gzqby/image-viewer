@@ -125,7 +125,7 @@ function getImageViewer() {
       while(length){
         const img_position = document.createElement('div');
         img_position.className='img_position';
-        img_position.innerHTML = '<div class="img_size"></div>';
+        img_position.innerHTML = '<div class="img_drag"><div class="img_size"></div></div>';
         box.append(img_position);
         length--;
       }
@@ -194,7 +194,7 @@ function getImageViewer() {
         const unSubOriginalShapEvent = this.on(originalShap, 'click',function(event){
           if(!that.hasClassName(this, 'notallow') && !that.hasClassName(this, 'active') && that.inserting[that.currentSize]) {
             event.preventDefault();
-            const sizeBox = imgBox.children[that.currentSize].firstChild;
+            const sizeBox = imgBox.children[that.currentSize].querySelector('.img_size');
             const img = sizeBox.firstChild;
             that.controlBoxAdapt(sizeBox, 0);
             that.sizeBoxAdapt(sizeBox, 1);
@@ -203,7 +203,8 @@ function getImageViewer() {
         const unSubWidthAdapterEvent = this.on(widthAdapter, 'click',function(event){
           if(!that.hasClassName(this, 'notallow') && !that.hasClassName(this, 'active') && that.inserting[that.currentSize]) {
             event.preventDefault();
-            const sizeBox = imgBox.children[that.currentSize].firstChild;
+            that.grabToInit();
+            const sizeBox = imgBox.children[that.currentSize].querySelector('.img_size');
             const img = sizeBox.firstChild;
             that.controlBoxAdapt(sizeBox, 1);
             that.sizeBoxAdapt(sizeBox, that.caclScale(imgBox.width, img.width));
@@ -212,7 +213,8 @@ function getImageViewer() {
         const unSubHeightAdapterEvent = this.on(heightAdapter, 'click',function(event){
           if(!that.hasClassName(this, 'notallow') && !that.hasClassName(this, 'active') && that.inserting[that.currentSize]) {
             event.preventDefault();
-            const sizeBox = imgBox.children[that.currentSize].firstChild;
+            that.grabToInit();
+            const sizeBox = imgBox.children[that.currentSize].querySelector('.img_size');
             const img = sizeBox.firstChild;
             that.controlBoxAdapt(sizeBox, 2);
             that.sizeBoxAdapt(sizeBox, that.caclScale(imgBox.height, img.height));
@@ -224,7 +226,7 @@ function getImageViewer() {
     },
     adapteScreen(){
       if(this.inserting[this.currentSize]) {
-        const sizeBox = imgBox.children[this.currentSize].firstChild;
+        const sizeBox = imgBox.children[this.currentSize].querySelector('.img_size');
         const img = sizeBox.firstChild;
         this.imgBoxResize();
         this.imgAdapt(img, sizeBox);
@@ -240,10 +242,6 @@ function getImageViewer() {
       } else if (ele.msRequestFullscreen) {
         return ele.msRequestFullscreen();
       };
-    },
-    on(dom, type, cb, options) {
-      dom.addEventListener(type,cb,options);
-      return () => {dom.removeEventListener(type,cb,options);}
     },
     unmount(){
       for (let index = 0; index < this.unEvents.length; index++) {
@@ -290,7 +288,7 @@ function getImageViewer() {
           return;
         });
         const unSubErrorEvent = this.on(image, 'error', function() {
-          image.src = '/imgerror.svg';
+          image.src = that.options.imgerror ? that.options.imgerror : '/imgerror.svg';
           that.insertImg(image, nowSize);
           return;
         });
@@ -312,7 +310,7 @@ function getImageViewer() {
         const element = imgBox.querySelectorAll('.img_position')[index];
         if (this.currentSize===index) {
           if(this.inserting[this.currentSize]){
-            this.controlBoxAdapt(element.firstChild);
+            this.controlBoxAdapt(element.querySelector('.img_size'));
           }
           this.classnames(element, 'show', true);
         }else{
@@ -329,12 +327,41 @@ function getImageViewer() {
         this.imgAdapt(img, nowSizeBox);
       }
       nowSizeBox.append(img);
+      this.subGrabEvent(nowSizeBox);
       this.inserting[nowSize]=true;
       this.loadingControl(false);
     },
-    getStyle(dom,attr){
-      const { clientType } = this.options;
-      return dom.currentStyle?dom.currentStyle[attr]:getComputedStyle(dom)[attr] || clientType === 1 ? 60 : 30;
+    subGrabEvent(nowSizeBox) {
+      // console.dir(nowSizeBox);
+      const {imgBox} = this.doms;
+      const that = this;
+      let unSubMouseMoveEvent,prevX=0,prevY=0,nowX=0,nowY=0;
+      const dragBox = nowSizeBox.parentElement;
+      const unSubMousedownEvent = this.on(dragBox, 'mousedown', function (event) {
+        event.preventDefault();
+        if(!(imgBox.width>=nowSizeBox.clientWidth*nowSizeBox.dataset.scale+that.options.gutter && imgBox.height>=nowSizeBox.clientHeight*nowSizeBox.dataset.scale+that.options.gutter)){
+          let downClientX=event.clientX,downClientY=event.clientY;
+          unSubMouseMoveEvent = that.on(dragBox, 'mousemove', function (event) {
+            nowX=prevX+event.clientX-downClientX;
+            nowY=prevY+event.clientY - downClientY;
+            flag=true;
+            dragBox.style.transform='translate('+ nowX +'px,'+ nowY +'px)';
+            // 'translate(100px, 100px)'
+            // console.log(event);
+          })
+        }
+      });
+      const unSubMouseupEvent = this.on(dragBox, 'mouseup', function () {
+        prevX=nowX;
+        prevY=nowY;
+        unSubMouseMoveEvent && unSubMouseMoveEvent();
+      });
+      this.unEvents.push(unSubMousedownEvent, unSubMouseupEvent);
+    },
+    grabToInit(){
+      const {imgBox} = this.doms;
+      const grabBox = imgBox.querySelectorAll('.img_drag')[this.currentSize];
+      grabBox.style.transform='none';
     },
     imgBoxResize() {
       const {imgBox} = this.doms;
@@ -407,6 +434,15 @@ function getImageViewer() {
         clearInterval(this.loadingTime);
         that.classnames(loading, 'show', false);
       }
+    },
+    // tool functions
+    on(dom, type, cb, options) {
+      dom.addEventListener(type,cb,options);
+      return () => {dom.removeEventListener(type,cb,options);}
+    },
+    getStyle(dom,attr){
+      const { clientType } = this.options;
+      return dom.currentStyle?dom.currentStyle[attr]:getComputedStyle(dom)[attr] || clientType === 1 ? 60 : 30;
     },
     notAllowed(dom){
       this.classnames(dom, 'notallow', true);
