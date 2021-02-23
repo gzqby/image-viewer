@@ -9,7 +9,7 @@ a{text-decoration: none;}
   -ms-user-select: none;
 }
 .imageViewerBox.img_pc{
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: 100%;
   left: 0;
@@ -139,13 +139,10 @@ a{text-decoration: none;}
 }
 .imageViewerBox.img_pc .img_imgBox{
   position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
-  padding-top: 60px;
-  overflow: hidden;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 .imageViewerBox.img_pc .img_imgBox .img_size{
   transition: transform .3s ease-in-out,-webkit-transform .3s ease-in-out;
