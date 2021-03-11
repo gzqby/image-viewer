@@ -86,4 +86,4 @@ imageViewer.load(options);
 3. Life cycle function add
 <!-- 4. Support customizable wrapper -->
 5. Support customizable event adding
-6. Support mouse drag and drop
+<!-- 6. Support mouse-->

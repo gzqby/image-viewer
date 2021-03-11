@@ -264,13 +264,15 @@ function getImageViewer() {
       if (this.options.clientType===1) {
         this.length-1-this.currentSize>0 ? this.allowed(this.doms.next) : this.notAllowed(this.doms.next);
         this.currentSize>0 ? this.allowed(this.doms.prev) : this.notAllowed(this.doms.prev);
+        this.boothChange();
+      }else{
+        
       }
       const {total,title,imgBox, currentSize} = this.doms;
       const {alt, src, width, height, element} = this.images[this.currentSize];
 
       currentSize.innerHTML=this.currentSize+1;
       title.innerHTML=alt;
-      this.boothChange();
       const that = this;
       const nowSize = this.currentSize;
       if(!this.inserting[nowSize]){
@@ -288,7 +290,7 @@ function getImageViewer() {
           return;
         });
         const unSubErrorEvent = this.on(image, 'error', function() {
-          image.src = that.options.imgerror ? that.options.imgerror : '/imgerror.svg';
+          image.src = that.options.imgerror ? that.options.imgerror : './imgerror.svg';
           that.insertImg(image, nowSize);
           return;
         });
@@ -437,6 +439,9 @@ function getImageViewer() {
         clearInterval(this.loadingTime);
         that.classnames(loading, 'show', false);
       }
+    },
+    changeClientType(number) {
+      this.options.clientType = number;
     },
     // tool functions
     on(dom, type, cb, options) {
