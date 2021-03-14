@@ -7,11 +7,8 @@ function getImageViewer() {
       modalStyle: {},
       imagesIsNotOk: ()=>{throw new Error("can't get images")},
       wrapper: [`<div>
-      <div class="img_title">
-        <span class="img_actions"><div class="img_icon icon_cycle"></div></span>
-      </div>
+      <div class="img_actions"><div class="img_icon icon_cycle"></div></div>
       <div class="img_imgBox">
-        <div class="img_sliceBox"></div>
       </div>
       <div class="img_controlBox clearfix">
         <span class="img_item img_pagebar"><span class="currentSize">0</span> / <span class="total">0</span></span>
@@ -48,7 +45,7 @@ function getImageViewer() {
         </div>`]
     },
     unEvents: [],
-    currentSize: 0,
+    currentPage: 0,
     images: [],
     doms: null,
     inserting: {},
@@ -56,19 +53,23 @@ function getImageViewer() {
       const cxtDom = this.cxtDom;
       const currentSize = cxtDom.querySelector('.currentSize');
       const total = cxtDom.querySelector('.total');
-      const prev = cxtDom.querySelector('.prev');
-      const next = cxtDom.querySelector('.next');
-      const originalShap = cxtDom.querySelector('.originalShap');
-      const heightAdapter = cxtDom.querySelector('.heightAdapter');
-      const widthAdapter = cxtDom.querySelector('.widthAdapter');
       const title = cxtDom.querySelector('.img_con');
-      const actions = cxtDom.querySelector('.img_actions');
       const imgBox = cxtDom.querySelector('.img_imgBox');
       const loading = cxtDom.querySelector('.img_loading');
       const closeIcon = cxtDom.querySelector('.img_close');
-      const fullIcon = cxtDom.querySelector('.img_full');
-      const controlBox = cxtDom.querySelector('.img_controlBox');
-      return {cxtDom,currentSize,total,prev,next,originalShap,heightAdapter,widthAdapter,title,actions,imgBox,loading,closeIcon,fullIcon,controlBox};
+      if (this.options.clientType===1) {
+        const controlBox = cxtDom.querySelector('.img_controlBox');
+        const prev = cxtDom.querySelector('.prev');
+        const next = cxtDom.querySelector('.next');
+        const originalShap = cxtDom.querySelector('.originalShap');
+        const heightAdapter = cxtDom.querySelector('.heightAdapter');
+        const widthAdapter = cxtDom.querySelector('.widthAdapter');
+        const actions = cxtDom.querySelector('.img_actions');
+        const fullIcon = cxtDom.querySelector('.img_full');
+        return {cxtDom,currentSize,total,prev,next,originalShap,heightAdapter,widthAdapter,title,actions,imgBox,loading,closeIcon,fullIcon,controlBox};
+      }else{
+        return { cxtDom, currentSize, total, title, imgBox, loading, closeIcon }
+      }
     },
     styles(obj){
       let str="";
@@ -121,14 +122,19 @@ function getImageViewer() {
       this.length = this.images.length;
       total.innerHTML=this.length;
       let length = this.length;
-      const box = imgBox.querySelector('.img_sliceBox') || imgBox;
+      const box = imgBox;
       while(length){
         const img_position = document.createElement('div');
         img_position.className='img_position';
-        img_position.innerHTML = '<div class="img_drag"><div class="img_size"></div></div>';
+        if (this.options.clientType===1) {
+          img_position.innerHTML = '<div class="img_drag"><div class="img_size"></div></div>';
+        }else{
+          img_position.innerHTML = '<div class="img_size"></div>';
+        }
         box.append(img_position);
         length--;
       }
+      this.doms.imgPositions= box.querySelectorAll('.img_position');
       if(this.options.modal) {
         this.options.close=true;
         this.openOrClose(false);
@@ -141,12 +147,11 @@ function getImageViewer() {
       const {actions,imgBox,prev,next,originalShap,widthAdapter,heightAdapter,closeIcon,fullIcon,cxtDom,controlBox} = this.doms;
       const { close, full, github, clientType } = this.options;
       const that = this;
-      this.pageTo();
       if(clientType===1) {
         this.classnames(controlBox, 'show', true);
-        // const positions = imgBox.querySelectorAll('.img_position');
-        // for (let index = 0; index < positions.length; index++) {
-        //   const position = positions[index];
+        // const imgP= imgBox.querySelectorAll('.img_position');
+        // for (let index = 0; index < imgPlength; index++) {
+        //   const position = imgPindex];
         //   console.log(position.firstChild.dataset.scale);
         // }
         if(full) {
@@ -182,39 +187,39 @@ function getImageViewer() {
         const unSubPrevEvent = this.on(prev, 'click',function(event){
           event.preventDefault();
           if(!that.hasClassName(this, 'notallow')){
-            that.pageTo(that.safePage(that.currentSize-1));
+            that.pageTo(that.safePage(that.currentPage-1));
           }
         });
         const unSubNextEvent = this.on(next, 'click',function(event){
           event.preventDefault();
           if(!that.hasClassName(this, 'notallow')){
-            that.pageTo(that.safePage(that.currentSize+1));
+            that.pageTo(that.safePage(that.currentPage+1));
           }
         });
         const unSubOriginalShapEvent = this.on(originalShap, 'click',function(event){
-          if(!that.hasClassName(this, 'notallow') && !that.hasClassName(this, 'active') && that.inserting[that.currentSize]) {
+          if(!that.hasClassName(this, 'notallow') && !that.hasClassName(this, 'active') && that.inserting[that.currentPage]) {
             event.preventDefault();
-            const sizeBox = imgBox.children[that.currentSize].querySelector('.img_size');
+            const sizeBox = imgBox.children[that.currentPage].querySelector('.img_size');
             const img = sizeBox.firstChild;
             that.controlBoxAdapt(sizeBox, 0);
             that.sizeBoxAdapt(sizeBox, 1);
           }
         });
         const unSubWidthAdapterEvent = this.on(widthAdapter, 'click',function(event){
-          if(!that.hasClassName(this, 'notallow') && !that.hasClassName(this, 'active') && that.inserting[that.currentSize]) {
+          if(!that.hasClassName(this, 'notallow') && !that.hasClassName(this, 'active') && that.inserting[that.currentPage]) {
             event.preventDefault();
             that.grabToInit();
-            const sizeBox = imgBox.children[that.currentSize].querySelector('.img_size');
+            const sizeBox = imgBox.children[that.currentPage].querySelector('.img_size');
             const img = sizeBox.firstChild;
             that.controlBoxAdapt(sizeBox, 1);
             that.sizeBoxAdapt(sizeBox, that.caclScale(imgBox.width, img.width));
           }
         });
         const unSubHeightAdapterEvent = this.on(heightAdapter, 'click',function(event){
-          if(!that.hasClassName(this, 'notallow') && !that.hasClassName(this, 'active') && that.inserting[that.currentSize]) {
+          if(!that.hasClassName(this, 'notallow') && !that.hasClassName(this, 'active') && that.inserting[that.currentPage]) {
             event.preventDefault();
             that.grabToInit();
-            const sizeBox = imgBox.children[that.currentSize].querySelector('.img_size');
+            const sizeBox = imgBox.children[that.currentPage].querySelector('.img_size');
             const img = sizeBox.firstChild;
             that.controlBoxAdapt(sizeBox, 2);
             that.sizeBoxAdapt(sizeBox, that.caclScale(imgBox.height, img.height));
@@ -222,11 +227,93 @@ function getImageViewer() {
         });
         this.unEvents.push(unSubPrevEvent, unSubNextEvent, unSubOriginalShapEvent, unSubWidthAdapterEvent, unSubHeightAdapterEvent);
       }else{
+        const width = this.mobileSwipeWidth = imgBox.getBoundingClientRect().width || window.outerWidth;
+        const unSubSwipeEvent = this.onMobileSwipe({
+          el: imgBox,
+          width: width/2,
+          cb: function(point){
+            if(point==='prev') {
+              if(that.safePage(that.currentPage-1)===that.currentPage-1){
+                that.pageTo(that.safePage(that.currentPage-1));
+              }else{
+                that.mobileBootChange();
+              }
+            }else if(point==='next') {
+              if(that.safePage(that.currentPage+1)===that.currentPage+1){
+                that.pageTo(that.safePage(that.currentPage+1));
+              }else{
+                that.mobileBootChange();
+              }
+            }else{
+              that.mobileBootChange();
+            }
+          },
+          move: function (distance) {
+            const {imgPositions, imgBox} = that.doms;
+            that.classnames(imgBox, 'transition', false);
+            [imgPositions[that.currentPage], imgPositions[that.currentPage-1], imgPositions[that.currentPage+1]].forEach((item)=>{
+              if(item) {
+                item.style.transform = 'translateX('+ (distance-that.currentPage*that.mobileSwipeWidth) +'px)';
+              }
+            });
+          }
+        });
+        this.unEvents.push(unSubSwipeEvent);
+        // this.on(imgBox, 'touchmove',function(event){
+        //   event.preventDefault();
+        //   console.log('touchmove', event);
+        // });
+        // this.on(imgBox, 'touchend',function(event){
+        //   console.log('touchend', event);
+        // });
+        // this.on(imgBox, 'touchcancel',function(event){
+        //   console.log('cancel', event);
+        // });
+        // const unSubNextEvent = this.on(next, 'click',function(event){
+        //   event.preventDefault();
+        //   that.pageTo(that.safePage(that.currentPage+1));
+        // });
+      }
+      this.pageTo();
+    },
+    onMobileSwipe({el, move, cb, width}) {
+      let startClientX=0,startClientY=0, moveDistance=0,startTimeStamp;
+      const moveFunc = (event) => {
+        event.preventDefault();
+        moveDistance = event.touches[0].clientX-startClientX;
+        if(Math.abs(event.touches[0].clientY-startClientY)>Math.abs(moveDistance)){
+          moveDistance = 0;
+        }else{
+          move(moveDistance, el);
+        }
+      }
+      const start = (event) => {
+        startTimeStamp = event.timeStamp;
+        startClientX = event.touches[0].clientX;
+        startClientY = event.touches[0].clientY;
+        el.addEventListener('touchmove', moveFunc);
+      }
+      const end = (event) => {
+        el.removeEventListener('touchmove', moveFunc);
+        let str;
+        if(event.timeStamp - startTimeStamp > 300) {
+          str = Math.abs(moveDistance) >= width/2 ? moveDistance > 0 ? 'prev' : 'next' : 'stay';
+        }else{
+          str = Math.abs(moveDistance) >= 15 ? moveDistance > 0 ? 'prev' : 'next' : 'stay';
+        }
+        cb(str);
+      }
+      el.addEventListener('touchstart', start);
+      el.addEventListener('touchend', end);
+      return () => {
+        el.removeEventListener('touchstart', start);
+        el.removeEventListener('touchend', end);
+        el.removeEventListener('touchmove', moveFunc);
       }
     },
     adapteScreen(){
-      if(this.inserting[this.currentSize]) {
-        const sizeBox = imgBox.children[this.currentSize].querySelector('.img_size');
+      if(this.inserting[this.currentPage]) {
+        const sizeBox = imgBox.children[this.currentPage].querySelector('.img_size');
         const img = sizeBox.firstChild;
         this.imgBoxResize();
         this.imgAdapt(img, sizeBox);
@@ -248,7 +335,7 @@ function getImageViewer() {
         const unSubEvent = this.unEvents[index];
         unSubEvent();
       }
-      this.currentSize = 0;
+      this.currentPage = 0;
     },
     safePage(number){
       if(number>this.length-1){
@@ -260,21 +347,21 @@ function getImageViewer() {
       }
     },
     pageTo(number=0){
-      this.currentSize=number;
+      this.currentPage=number;
       if (this.options.clientType===1) {
-        this.length-1-this.currentSize>0 ? this.allowed(this.doms.next) : this.notAllowed(this.doms.next);
-        this.currentSize>0 ? this.allowed(this.doms.prev) : this.notAllowed(this.doms.prev);
+        this.length-1-this.currentPage>0 ? this.allowed(this.doms.next) : this.notAllowed(this.doms.next);
+        this.currentPage>0 ? this.allowed(this.doms.prev) : this.notAllowed(this.doms.prev);
         this.boothChange();
       }else{
-        
+        this.mobileBootChange();
       }
       const {total,title,imgBox, currentSize} = this.doms;
-      const {alt, src, width, height, element} = this.images[this.currentSize];
+      const {alt, src, width, height, element} = this.images[this.currentPage];
 
-      currentSize.innerHTML=this.currentSize+1;
+      currentSize.innerHTML=this.currentPage+1;
       title.innerHTML=alt;
       const that = this;
-      const nowSize = this.currentSize;
+      const nowSize = this.currentPage;
       if(!this.inserting[nowSize]){
         this.loadingControl(true);
         const image = document.createElement('img');
@@ -306,12 +393,21 @@ function getImageViewer() {
       }
       return this.options.modal;
     },
+    mobileBootChange() {
+      const {imgPositions, imgBox} = this.doms;
+      const currentPage = this.currentPage;
+      this.classnames(imgBox, 'transition', true);
+      for (let index = 0; index < imgPositions.length; index++) {
+        const element = imgPositions[index];
+        element.style.transform='translateX(-'+currentPage*this.mobileSwipeWidth+'px)';
+      };
+    },
     boothChange(){
       const {imgBox} = this.doms;
       for (let index = 0; index < imgBox.children.length; index++) {
         const element = imgBox.querySelectorAll('.img_position')[index];
-        if (this.currentSize===index) {
-          if(this.inserting[this.currentSize]){
+        if (this.currentPage===index) {
+          if(this.inserting[this.currentPage]){
             this.controlBoxAdapt(element.querySelector('.img_size'));
           }
           this.classnames(element, 'show', true);
@@ -365,7 +461,7 @@ function getImageViewer() {
     },
     grabToInit(){
       const {imgBox} = this.doms;
-      const grabBox = imgBox.querySelectorAll('.img_drag')[this.currentSize];
+      const grabBox = imgBox.querySelectorAll('.img_drag')[this.currentPage];
       grabBox.style.transform='none';
     },
     imgBoxResize() {

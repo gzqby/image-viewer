@@ -15,6 +15,10 @@
 </body>
 <script src="./index.js"></script>
 <script>
-  imageViewer.load({list: document.querySelector("ul")});
+  if (/(iPhone|iPod|iOS｜Android)/i.test(navigator.userAgent)) { //判断iPhone|iPad|iPod|iOS
+    imageViewer.load({list: document.querySelector("ul"), imgerror: '/client/imgerror.svg', clientType: 0});
+  } else {
+    imageViewer.load({list: document.querySelector("ul"), imgerror: '/client/imgerror.svg'});
+  };
 </script>
 </html>
