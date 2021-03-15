@@ -259,20 +259,6 @@ function getImageViewer() {
           }
         });
         this.unEvents.push(unSubSwipeEvent);
-        // this.on(imgBox, 'touchmove',function(event){
-        //   event.preventDefault();
-        //   console.log('touchmove', event);
-        // });
-        // this.on(imgBox, 'touchend',function(event){
-        //   console.log('touchend', event);
-        // });
-        // this.on(imgBox, 'touchcancel',function(event){
-        //   console.log('cancel', event);
-        // });
-        // const unSubNextEvent = this.on(next, 'click',function(event){
-        //   event.preventDefault();
-        //   that.pageTo(that.safePage(that.currentPage+1));
-        // });
       }
       this.pageTo();
     },
