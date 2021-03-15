@@ -4,20 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta name="referrer" content="no-referrer" >
-  <!-- <title><%= title %></title> -->
-  <link rel="stylesheet" href="../client/style.css">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
   <ul style="display: none;">
-    <!-- <% images.forEach(function(item){ %>
+    <% images.forEach(function(item){ %>
       <li><img data-src="<%= item.src %>"  alt="<%= item.alt %>"></li>
-    <% }); %> -->
-    <!-- <li><img data-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fa0.att.hudong.com%2F22%2F43%2F01300533991704134665435963373.jpg&refer=http%3A%2F%2Fa0.att.hudong.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1616652259&t=b807163613ae4d785a1b17ab4ce7cad7"></li> -->
-    <li><img data-src="https://cdn.nlark.com/yuque/0/2021/png/160122/1609931560222-assets/web-upload/3e435200-3b1d-4099-a49e-3bb9760699e7.png"></li>
-    <li><img data-src="http://localhost:3000/request-view?src=https://cdn.nlark.com/yuque/0/2021/png/160122/1609931560222-assets/web-upload/3e435200-3b1d-4099-a49e-3bb9760699e7.png"></li>
+    <% }); %>
   </ul>
 </body>
-<script src="../client/index.js"></script>
+<script src="./index.js"></script>
 <script>
   if (/(iPhone|iPod|iOS｜Android)/i.test(navigator.userAgent)) { //判断iPhone|iPad|iPod|iOS
     imageViewer.load({list: document.querySelector("ul"), imgerror: '/client/imgerror.svg', clientType: 0});
